@@ -4,6 +4,8 @@ Qiitaに投稿した[PowerShellでパスワード生成](http://qiita.com/Takeru
 [PowerShellで生成したパスワードを暗号化して保存する](http://qiita.com/Takeru/items/c8c769f88e8ccb06ffe3)を使って、
 少し汎用性をもたせたスクリプトにしてみました。  
 
+※シェルスクリプト版はパスワード生成のみでログは残しません。  
+
 ##Usage | 使い方
 引数なしで起動すると英小文字と数字を組み合わせた８桁のパスワードを生成します。  
 引数に整数を指定することで任意の長さのパスワードを生成できます。  
@@ -13,6 +15,7 @@ Qiitaに投稿した[PowerShellでパスワード生成](http://qiita.com/Takeru
 * -l 英小文字
 * -n 数字
 * -s 記号
+* -a 上記全文字種（シェルスクリプト版のみ）
 
 生成したパスワードは生成日時に続けて暗号化された状態で、ホームディレクトリ中のpasswd.logに追記されます。  
 復号方法は[PowerShellで生成したパスワードを暗号化して保存する](http://qiita.com/Takeru/items/c8c769f88e8ccb06ffe3)を参照してください。  
