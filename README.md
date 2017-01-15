@@ -16,6 +16,7 @@ Qiitaに投稿した[PowerShellでパスワード生成](http://qiita.com/Takeru
 * -n 数字
 * -s 記号
 * -a 上記全文字種（シェルスクリプト版のみ）
+* -x 紛らわしい文字(I1l|0O)を除外する（シェルスクリプト版のみ）
 
 生成したパスワードは生成日時に続けて暗号化された状態で、ホームディレクトリ中のpasswd.logに追記されます。  
 復号方法は[PowerShellで生成したパスワードを暗号化して保存する](http://qiita.com/Takeru/items/c8c769f88e8ccb06ffe3)を参照してください。  

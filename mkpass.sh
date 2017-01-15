@@ -1,8 +1,9 @@
 #!/bin/sh - 
-# @(#) mkpass.sh ver.0.5.0  2017.1.14  (c)Takeru.
+# @(#) mkpass.sh ver.0.6.0  2017.1.15  (c)Takeru.
 #
 # Usage:
-#      mkpass.sh [c] [-u] [-l] [-n] [-s]
+#      mkpass.sh [c] [-u] [-l] [-n] [-s] [-x]
+#      mkpass.sh [c] [-a] [-x]
 #      mkpass.sh -h
 #      mkpass.sh -v
 #
@@ -14,10 +15,12 @@
 #
 #       c      Specify length of password.
 #      -a      All characters are available.
+#              This option has priority over other options.
 #      -u      Capital alphabet characters are available.
 #      -l      Small alphabet characters are available.
 #      -n      Numeric characters are available.
 #      -s      Symbol characters are available.
+#      -x      Misleading characters (I1l|0O) are excluded.
 #      -h      Display this credit.
 #      -v      Display version.
 #
@@ -29,31 +32,27 @@
 set -o nounset                              # Treat unset variables as an error
 
 error="\\nFor more information, type \"$0 -h\".\\n"
-if test $# -gt 5; then
+if test $# -gt 6; then
   echo $0: Too many options.$error
   exit 1
 fi
 member=""
-passwd=""
+exclude="[:blank:]"
 count=8
-upper="A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-lower="a b c d e f g h i j k l m n o p q r s t u v w x y z"
-number="0 1 2 3 4 5 6 7 8 9"
-symbol="\" % & ' ( ) ++ + , - . / : ; < = > ? @ [ \\ ] ^ _ \` { | } ~"
-# アスタリスクは展開されてしまうので一旦++で代用
 if test $# -gt 0; then
   for n in `seq 1 $#`
   do
     option=`echo $@ | cut -d ' ' -f $n`
     case $option in
-      -a) member="$upper $lower $number $symbol";;
-      -u) member="$member $upper";;
-      -l) member="$member $lower";;
-      -n) member="$member $number";;
-      -s) member="$member $symbol";;
-      -h) head -27 $0 | tail -26 | sed 's/^#//'; exit 0;;
+      -a) member="[:graph:]";;
+      -u) member="${member}[:upper:]";;
+      -l) member="${member}[:lower:]";;
+      -n) member="${member}[:digit:]";;
+      -s) member="${member}[:punct:]";;
+      -x) exclude="${exclude}I1l|0O";;
+      -h) head -30 $0 | tail -29 | sed 's/^#//'; exit 0;;
       -v) head -3 $0 | tail -2 | sed 's/^#//'; exit 0;;
-       *) expr $option + 1 > /dev/null 2>%1
+       *) expr $option + 1 > /dev/null 2>&1
           if test $? -lt 2; then
             if test $option -ne 0; then
               count=$option
@@ -69,13 +68,6 @@ if test $# -gt 0; then
 fi
 length=`echo $member | wc -w`
 if test $length -eq 0; then
-  member="$lower $number"
+  member="[:lower:][:digit:]"
 fi
-length=`echo $member | wc -w`
-for n in `seq 1 $count`
-do
-  code=`echo $member | cut -d ' ' -f $(($(od -vAn -tu4 -N4 /dev/urandom) % $length + 1))`
-  code=`echo $code | sed 's/++/*/'`
-  passwd=$passwd$code
-done
-echo $passwd
+env LC_CTYPE=C tr -dc "$member" </dev/urandom | tr -d "$exclude" | fold -w $count | head -1
