@@ -1,8 +1,8 @@
-param([switch] $h, [switch] $u, [switch] $l, [switch] $n, [switch] $s, [int] $c=8)
+param([switch] $a, [switch] $h, [switch] $u, [switch] $l, [switch] $n, [switch] $s, [int] $c=8)
 #--------------------------------------------------------------------------
 $credit = @"
 
-  mkpass.ps1 ver.1.00  2017.1.12  (c)Takeru.
+  mkpass.ps1 ver.1.10  2017.1.17  (c)Takeru.
 
   Usage:
         mkpass.ps1 [c] [-u] [-l] [-n] [-s]
@@ -10,11 +10,13 @@ $credit = @"
 
   Description:
         The mkpass utility generates a password.
-        If arguments are not specified, the length of password is 8
+        If arguments are not specified, length of password is 8
         and available characters are small alphabet and number.
         Options to select characters are possible to combine.
 
          c      Specify the length of password.
+        -a      All characters are available.
+                This option has priority over other options.
         -u      Capital alphabet characters are available.
         -l      Small alphabet characters are available.
         -n      Numeric characters are available.
@@ -44,10 +46,16 @@ if ($n) {
 if ($s) {
   $member+=(33..47)+(58..64)+(91..96) +(123..126)
 }
+if ($a) {
+  $member=(33..126)
+}
 if ($member.length -eq 0) {
   $member=(97..122+48..57)
 }
-$passwd=-join (get-random -count $c -input ($member | %{[char]$_}))
+$passwd=""
+foreach ($n in 1..$c) {
+  $passwd=$passwd+$(Get-Random -input ($member | %{[char]$_}))
+}
 $passwd
 $passwd | clip
 $secure=convertfrom-securestring -securestring (convertto-securestring $passwd -asplaintext -force)
