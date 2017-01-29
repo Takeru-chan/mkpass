@@ -2,7 +2,7 @@ param([switch] $a, [switch] $h, [switch] $u, [switch] $l, [switch] $n, [switch] 
 #--------------------------------------------------------------------------
 $credit = @"
 
-  mkpass.ps1 ver.1.10  2017.1.17  (c)Takeru.
+  mkpass.ps1 ver.1.11  2017.1.29  (c)Takeru.
 
   Usage:
         mkpass.ps1 [c] [-u] [-l] [-n] [-s]
@@ -53,7 +53,7 @@ if ($member.length -eq 0) {
   $member=(97..122+48..57)
 }
 $passwd=""
-foreach ($n in 1..$c) {
+foreach ($count in 1..$c) {
   $passwd=$passwd+$(Get-Random -input ($member | %{[char]$_}))
 }
 $passwd
