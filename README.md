@@ -36,6 +36,10 @@ PowerShell版は生成したパスワードを暗号化してログに残すの�
 
 コメントのある行は-nオプションを指定しても削除されません。  
 
+nオプションに続けてコメントを与えると、指定行にコメントを追記できます。
+コメントのある行にnオプションでコメントを与えると、コメントを上書き更新します。
+またコメントのある行に対して-nオプションとともに同一コメントを与えると、コメントが削除されます。  
+
 ##License
 This script has released under the MIT license.  
 [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT)
