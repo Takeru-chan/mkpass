@@ -10,6 +10,7 @@ let testConditionDataSet: [ConditionDataSet] = [
   ConditionDataSet(condition:"No option", arguments:["command",""], result:(false, false, false, false, false, 0, 0)),
   ConditionDataSet(condition:"Specified correct length(10)", arguments:["command","10"], result:(false, false, false, false, false, 10, 0)),
   ConditionDataSet(condition:"Specified invalild length(-10)", arguments:["command","-10"], result:(false, false, false, false, false, 0, 1)),
+  ConditionDataSet(condition:"Specified invalild length(0.5)", arguments:["command","0.5"], result:(false, false, false, false, false, 0, 1)),
   ConditionDataSet(condition:"Specified duplicated length(10 5)", arguments:["command","10","5"], result:(false, false, false, false, false, 5, 0)),
   ConditionDataSet(condition:"Specified correct switch(-a)", arguments:["command","-a"], result:(true, true, true, true, false, 0, 0)),
   ConditionDataSet(condition:"Specified correct switch(-ax)", arguments:["command","-ax"], result:(true, true, true, true, true, 0, 0)),
@@ -26,6 +27,7 @@ let testConditionDataSet: [ConditionDataSet] = [
   ConditionDataSet(condition:"Specified correct switch(-s)", arguments:["command","-s"], result:(false, false, false, true, false, 0, 0)),
   ConditionDataSet(condition:"Specified correct switch(-sx)", arguments:["command","-sx"], result:(false, false, false, true, true, 0, 0)),
   ConditionDataSet(condition:"Specified correct switch(-s -x)", arguments:["command","-s","-x"], result:(false, false, false, true, true, 0, 0)),
+  ConditionDataSet(condition:"Specified correct switch(-x)", arguments:["command","-x"], result:(false, false, false, false, true, 0, 0)),
   ConditionDataSet(condition:"Specified invalild switch(-A)", arguments:["command","-A"], result:(false, false, false, false, false, 0, 1)),
   ConditionDataSet(condition:"Specified correct switch(-a) and length(10)", arguments:["command","-a","10"], result:(true, true, true, true, false, 10, 0))]
 for loop in testConditionDataSet {
