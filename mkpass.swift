@@ -1,18 +1,13 @@
 #! /usr/bin/swift
 import Foundation
+import Cocoa
 let arguments: [String] = CommandLine.arguments
 var returnSet: (upper:Bool, lower:Bool, number:Bool, symbol:Bool, exclude:Bool, length:Int, status:Int)
 var member: [String] = []
 returnSet = CheckOption(arguments: arguments).getOption()
-if !(returnSet.upper) {
-  if !(returnSet.lower) {
-    if !(returnSet.number) {
-      if !(returnSet.symbol) {
-        returnSet.lower = true
-        returnSet.number = true
-      }
-    }
-  }
+if !(returnSet.upper || returnSet.lower || returnSet.number || returnSet.symbol) {
+	returnSet.lower = true
+	returnSet.number = true
 }
 if returnSet.length == 0 {
   returnSet.length = 8
@@ -51,3 +46,8 @@ for n in 1...returnSet.length {
   passwd += member[Int(code)]
 }
 print(passwd)
+let board = NSPasteboard.general()
+board.clearContents()
+let item = NSPasteboardItem()
+item.setString(passwd, forType: NSPasteboardTypeString)
+board.writeObjects([item])
