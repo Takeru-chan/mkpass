@@ -2,43 +2,25 @@
 import Foundation
 import Cocoa
 let arguments: [String] = CommandLine.arguments
-var returnSet: (upper:Bool, lower:Bool, number:Bool, symbol:Bool, exclude:Bool, length:Int, status:Int)
+var returnSet: (flag:[Bool], exclude:Bool, length:Int, status:Int)
 var member: [String] = []
+let range:[[[Int]]] = [[[65,90]],[[97,122]],[[48,57]],[[33,47],[58,64],[91,96],[123,126]]]
+var exclude:[[Int]] = [[14,8],[11],[1,0],[29]]
 returnSet = CheckOption(arguments: arguments).getOption()
-if !(returnSet.upper || returnSet.lower || returnSet.number || returnSet.symbol) {
-	returnSet.lower = true
-	returnSet.number = true
+if !(returnSet.flag[0] || returnSet.flag[1] || returnSet.flag[2] || returnSet.flag[3]) {
+	returnSet.flag[1] = true
+	returnSet.flag[2] = true
 }
 if returnSet.length == 0 {
   returnSet.length = 8
 }
-if returnSet.upper {
-  if returnSet.exclude {
-    member += GenerateMember().getMember(range: [[65,90]], exclude: [14,8])
-  } else {
-    member += GenerateMember().getMember(range: [[65,90]], exclude: [])
-  }
-}
-if returnSet.lower {
-  if returnSet.exclude {
-    member += GenerateMember().getMember(range: [[97,122]], exclude: [11])
-  } else {
-    member += GenerateMember().getMember(range: [[97,122]], exclude: [])
-  }
-}
-if returnSet.number {
-  if returnSet.exclude {
-    member += GenerateMember().getMember(range: [[48,57]], exclude: [1,0])
-  } else {
-    member += GenerateMember().getMember(range: [[48,57]], exclude: [])
-  }
-}
-if returnSet.symbol {
-  if returnSet.exclude {
-    member += GenerateMember().getMember(range: [[33,47],[58,64],[91,96],[123,126]], exclude: [29])
-  } else {
-    member += GenerateMember().getMember(range: [[33,47],[58,64],[91,96],[123,126]], exclude: [])
-  }
+for n in 0...3 {
+	if (returnSet.flag[n]) {
+		if !(returnSet.exclude) {
+			exclude[n] = []
+		}
+	member += GenerateMember().getMember(range: range[n], exclude: exclude[n])
+	}
 }
 var passwd: String = ""
 for n in 1...returnSet.length {

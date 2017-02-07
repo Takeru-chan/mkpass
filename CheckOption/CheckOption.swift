@@ -2,9 +2,9 @@ class CheckOption {
   private var arguments: [String]
   private var argType: String
   private var option: String
-  private var param: (upper: Bool, lower: Bool, number: Bool, symbol: Bool, exclude: Bool, length: Int, status: Int)
+  private var param: (flag: [Bool], exclude: Bool, length: Int, status: Int)
   init(arguments: [String], argType: String = "unknown", option: String = "",
-               param: (upper: Bool, lower: Bool, number: Bool, symbol: Bool, exclude: Bool, length: Int, status: Int) = (false, false, false, false, false, 0, 0)) {
+               param: (flag: [Bool], exclude: Bool, length: Int, status: Int) = ([false, false, false, false], false, 0, 0)) {
     self.arguments = arguments
     self.argType = argType
     self.option = option
@@ -28,18 +28,18 @@ class CheckOption {
         } else if argType == "optSW" {
           switch char {
           case "a":
-            param.upper = true
-            param.lower = true
-            param.number = true
-            param.symbol = true
+            param.flag[0] = true
+            param.flag[1] = true
+            param.flag[2] = true
+            param.flag[3] = true
           case "u":
-            param.upper = true
+            param.flag[0] = true
           case "l":
-            param.lower = true
+            param.flag[1] = true
           case "n":
-            param.number = true
+            param.flag[2] = true
           case "s":
-            param.symbol = true
+            param.flag[3] = true
           case "x":
             param.exclude = true
           default:
@@ -70,8 +70,8 @@ class CheckOption {
       argType = "unknown"
     }
   }
-  func getOption() -> (Bool, Bool, Bool, Bool, Bool, Int, Int) {
+  func getOption() -> ([Bool], Bool, Int, Int) {
     self.checkArguments()
-    return (param.upper, param.lower, param.number, param.symbol, param.exclude, param.length, param.status)
+    return ([param.flag[0], param.flag[1], param.flag[2], param.flag[3]], param.exclude, param.length, param.status)
   }
 }
