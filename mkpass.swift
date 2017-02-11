@@ -1,6 +1,7 @@
 #! /usr/bin/swift
 import Foundation
-import Cocoa
+let screen:Screen = Screen()
+let pasteboard:Pasteboard = Pasteboard()
 let arguments: [String] = CommandLine.arguments
 var returnSet: (upper:Bool, lower:Bool, number:Bool, symbol:Bool, exclude:Bool, length:Int, status:Int)
 var member: [String] = []
@@ -45,9 +46,5 @@ for n in 1...returnSet.length {
   var code: UInt32  = arc4random_uniform(UInt32(member.count))
   passwd += member[Int(code)]
 }
-print(passwd)
-let board = NSPasteboard.general()
-board.clearContents()
-let item = NSPasteboardItem()
-item.setString(passwd, forType: NSPasteboardTypeString)
-board.writeObjects([item])
+screen.write(message:passwd)
+pasteboard.write(message:passwd)
