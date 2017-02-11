@@ -1,10 +1,10 @@
-class CheckOption {
-  private var arguments: [String]
+class Condition {
+  private let arguments: [String]
   private var argType: String
   private var option: String
-  private var param: (upper: Bool, lower: Bool, number: Bool, symbol: Bool, exclude: Bool, length: Int, status: Int)
-  init(arguments: [String], argType: String = "unknown", option: String = "",
-               param: (upper: Bool, lower: Bool, number: Bool, symbol: Bool, exclude: Bool, length: Int, status: Int) = (false, false, false, false, false, 0, 0)) {
+  private var param: (upper: Bool, lower: Bool, number: Bool, symbol: Bool, exclude: Bool, length: Int, status: Int32)
+  init(arguments: [String] = CommandLine.arguments, argType: String = "unknown", option: String = "",
+               param: (upper: Bool, lower: Bool, number: Bool, symbol: Bool, exclude: Bool, length: Int, status: Int32) = (false, false, false, false, false, 0, 0)) {
     self.arguments = arguments
     self.argType = argType
     self.option = option
@@ -70,8 +70,15 @@ class CheckOption {
       argType = "unknown"
     }
   }
-  func getOption() -> (Bool, Bool, Bool, Bool, Bool, Int, Int) {
+  func get() -> (Bool, Bool, Bool, Bool, Bool, Int, Int32) {
     self.checkArguments()
+    if !(param.upper || param.lower || param.number || param.symbol) {
+      param.lower = true
+      param.number = true
+    }
+    if param.length == 0 {
+      param.length = 8
+    }
     return (param.upper, param.lower, param.number, param.symbol, param.exclude, param.length, param.status)
   }
 }
