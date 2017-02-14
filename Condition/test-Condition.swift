@@ -1,3 +1,9 @@
 #! /usr/bin/swift
 import Foundation
-print(Condition().get())
+var result:(member:[Character], length:Int, status:Int32)
+var strings: String = ""
+result = Condition().get()
+for n in result.member {
+	strings += "\(n)"
+}
+print("\(strings)-\(result.length)-\(result.status)")
