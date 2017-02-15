@@ -1,50 +1,43 @@
 class Condition {
-  private let arguments: [String]
+  private var arguments: [String]
   private var length: Int
   private var returnCode: Int32
-  private var member: String
-  private let upper: [String]
-  private let lower: [String]
-  private let number: [String]
-  private let symbol: [String]
-  private var argType: String
-  private var option: String
-  private var status: (upper: Int, lower: Int, number: Int, symbol: Int, exclude: Int)
-  init(arguments: [String] = CommandLine.arguments, argType: String = "unknown", option: String = "",
-               length: Int = 0, returnCode: Int32 = 0, member: String = "",
-               upper: [String] = ["ABCDEFGHIJKLMNOPQRSTUVWXYZ","ABCDEFGHJKLMNPQRSTUVWXYZ"],
-               lower: [String] = ["abcdefghijklmnopqrstuvwxyz","abcdefghijkmnopqrstuvwxyz"],
-               number: [String] = ["0123456789","23456789"],
-               symbol: [String] = ["!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~","!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{}~"],
-               status: (upper: Int, lower: Int, number: Int, symbol: Int, exclude: Int) = (0, 0, 0, 0, 0)) {
+  private var member: [Character]
+  init(arguments: [String], length: Int = 0, returnCode: Int32 = 0, member: [Character] = []) {
     self.arguments = arguments
     self.length = length
     self.returnCode = returnCode
     self.member = member
-    self.upper = upper
-    self.lower = lower
-    self.number = number
-    self.symbol = symbol
-    self.argType = argType
-    self.option = option
-    self.status = status
   }
   func generateMember() {
+    enum ArgsType {
+      case unknown
+      case option
+      case length
+      case error
+    }
+    var argType: ArgsType = ArgsType.unknown
+    var option: String
+    let upper: [String] = ["ABCDEFGHIJKLMNOPQRSTUVWXYZ","ABCDEFGHJKLMNPQRSTUVWXYZ"]
+    let lower: [String] = ["abcdefghijklmnopqrstuvwxyz","abcdefghijkmnopqrstuvwxyz"]
+    let number: [String] = ["0123456789","23456789"]
+    let symbol: [String] = ["!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~","!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{}~"]
+    var status: (upper: Int, lower: Int, number: Int, symbol: Int, exclude: Int) = (0, 0, 0, 0, 0)
     chk_opt: for n in 1..<arguments.count {
       option = arguments[n]
       for char in option.characters {
-        if argType == "unknown" {
+        if argType == ArgsType.unknown {
           switch char {
           case "-":
-            argType = "optSW"
+            argType = ArgsType.option
           case "1"..."9":
-            argType = "length"
+            argType = ArgsType.length
           default:
-            argType = "error"
+            argType = ArgsType.error
             returnCode = 1
             break
           }
-        } else if argType == "optSW" {
+        } else if argType == ArgsType.option {
           switch char {
           case "a":
             status.upper |= 0b00000001
@@ -62,16 +55,16 @@ class Condition {
           case "x":
             status.exclude |=  0b00000001
           default:
-            argType = "error"
+            argType = ArgsType.error
             returnCode = 1
             break
           }
-        } else if argType == "length" {
+        } else if argType == ArgsType.length {
           switch char {
           case "0"..."9":
-            argType = "length"
+            argType = ArgsType.length
           default:
-            argType = "error"
+            argType = ArgsType.error
             returnCode = 1
             break
           }
@@ -80,29 +73,25 @@ class Condition {
           break chk_opt
         }
       }
-      switch argType {
-      case "length":
+      if argType == ArgsType.length {
         length = Int(option)!
-      default:
-        break
       }
-      argType = "unknown"
+      argType = ArgsType.unknown
     }
     if status.upper != 0 {
-      member += upper[status.exclude]
+      member += Array(upper[status.exclude].characters)
     }
     if status.lower != 0 {
-      member += lower[status.exclude]
+      member += Array(lower[status.exclude].characters)
     }
     if status.number != 0 {
-      member += number[status.exclude]
+      member += Array(number[status.exclude].characters)
     }
     if status.symbol != 0 {
-      member += symbol[status.exclude]
+      member += Array(symbol[status.exclude].characters)
     }
-    if (returnCode == 0 && member == "") {
-      member += lower[status.exclude]
-      member += number[status.exclude]
+    if (returnCode == 0 && member.count == 0) {
+      member = Array(lower[status.exclude].characters) + Array(number[status.exclude].characters)
     }
     if (returnCode == 0 && length == 0) {
       length = 8
@@ -110,7 +99,6 @@ class Condition {
   }
   func get() -> ([Character], Int, Int32) {
     self.generateMember()
-    let chars: [Character] = Array(member.characters)
-    return (chars, length, returnCode)
+    return (member, length, returnCode)
   }
 }

@@ -2,7 +2,7 @@
 import Foundation
 let screen:Screen = Screen()
 let pasteboard:Pasteboard = Pasteboard()
-var returnSet: (member:[Character], length:Int, status:Int32) = Condition().get()
+let returnSet: (member:[Character], length:Int, status:Int32) = Condition(arguments:CommandLine.arguments).get()
 var passwd: String = ""
 if returnSet.status == 0 {
   for n in 1...returnSet.length {
