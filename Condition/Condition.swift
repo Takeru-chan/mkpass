@@ -1,84 +1,104 @@
 class Condition {
-  private let arguments: [String]
-  private var argType: String
-  private var option: String
-  private var param: (upper: Bool, lower: Bool, number: Bool, symbol: Bool, exclude: Bool, length: Int, status: Int32)
-  init(arguments: [String] = CommandLine.arguments, argType: String = "unknown", option: String = "",
-               param: (upper: Bool, lower: Bool, number: Bool, symbol: Bool, exclude: Bool, length: Int, status: Int32) = (false, false, false, false, false, 0, 0)) {
+  private var arguments: [String]   // Condition class requires arguments as CommandLine.arguments.
+  private var length: Int           // Condition class returns length of password from options.
+  private var returnCode: Int32     // Condition class returns return code. Success:0, Failure:1
+  private var member: [Character]   // Condition class returns character set of password from options.
+  init(arguments: [String], length: Int = 0, returnCode: Int32 = 0, member: [Character] = []) {
     self.arguments = arguments
-    self.argType = argType
-    self.option = option
-    self.param = param
+    self.length = length
+    self.returnCode = returnCode
+    self.member = member
   }
-  func checkArguments() {
+  func generateMember() {
+    enum ArgsType {
+      case unknown
+      case option
+      case length
+      case error
+    }
+    var argType: ArgsType = ArgsType.unknown
+    var option: String
+    let upper: [String] = ["ABCDEFGHIJKLMNOPQRSTUVWXYZ","ABCDEFGHJKLMNPQRSTUVWXYZ"]
+    let lower: [String] = ["abcdefghijklmnopqrstuvwxyz","abcdefghijkmnopqrstuvwxyz"]
+    let number: [String] = ["0123456789","23456789"]
+    let symbol: [String] = ["!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~","!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{}~"]
+    var status: (upper: Int, lower: Int, number: Int, symbol: Int, exclude: Int) = (0, 0, 0, 0, 0)
     chk_opt: for n in 1..<arguments.count {
       option = arguments[n]
       for char in option.characters {
-        if argType == "unknown" {
+        if argType == ArgsType.unknown {
           switch char {
           case "-":
-            argType = "optSW"
+            argType = ArgsType.option
           case "1"..."9":
-            argType = "length"
+            argType = ArgsType.length
           default:
-            argType = "error"
-            param.status = 1
+            argType = ArgsType.error
+            returnCode = 1
             break
           }
-        } else if argType == "optSW" {
+        } else if argType == ArgsType.option {
           switch char {
           case "a":
-            param.upper = true
-            param.lower = true
-            param.number = true
-            param.symbol = true
+            status.upper |= 0b00000001
+            status.lower |= 0b00000001
+            status.number |= 0b00000001
+            status.symbol |= 0b00000001
           case "u":
-            param.upper = true
+            status.upper |= 0b00000001
           case "l":
-            param.lower = true
+            status.lower |= 0b00000001
           case "n":
-            param.number = true
+            status.number |= 0b00000001
           case "s":
-            param.symbol = true
+            status.symbol |= 0b00000001
           case "x":
-            param.exclude = true
+            status.exclude |=  0b00000001
           default:
-            argType = "error"
-            param.status = 1
+            argType = ArgsType.error
+            returnCode = 1
             break
           }
-        } else if argType == "length" {
+        } else if argType == ArgsType.length {
           switch char {
           case "0"..."9":
-            argType = "length"
+            argType = ArgsType.length
           default:
-            argType = "error"
-            param.status = 1
+            argType = ArgsType.error
+            returnCode = 1
             break
           }
         }
-        if param.status != 0 {
+        if returnCode != 0 {
           break chk_opt
         }
       }
-      switch argType {
-      case "length":
-        param.length = Int(option)!
-      default:
-        break
+      if argType == ArgsType.length {
+        length = Int(option)!
       }
-      argType = "unknown"
+      argType = ArgsType.unknown
+    }
+    if status.upper != 0 {
+      member += Array(upper[status.exclude].characters)
+    }
+    if status.lower != 0 {
+      member += Array(lower[status.exclude].characters)
+    }
+    if status.number != 0 {
+      member += Array(number[status.exclude].characters)
+    }
+    if status.symbol != 0 {
+      member += Array(symbol[status.exclude].characters)
+    }
+    if (returnCode == 0 && member.count == 0) {
+      member = Array(lower[status.exclude].characters) + Array(number[status.exclude].characters)
+    }
+    if (returnCode == 0 && length == 0) {
+      length = 8
     }
   }
-  func get() -> (Bool, Bool, Bool, Bool, Bool, Int, Int32) {
-    self.checkArguments()
-    if !(param.upper || param.lower || param.number || param.symbol) {
-      param.lower = true
-      param.number = true
-    }
-    if param.length == 0 {
-      param.length = 8
-    }
-    return (param.upper, param.lower, param.number, param.symbol, param.exclude, param.length, param.status)
+  func get() -> ([Character], Int, Int32) {
+    self.generateMember()
+    return (member, length, returnCode)
   }
 }
