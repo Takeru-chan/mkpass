@@ -1,8 +1,8 @@
 class Condition {
-  private var arguments: [String]
-  private var length: Int
-  private var returnCode: Int32
-  private var member: [Character]
+  private var arguments: [String]   // Condition class requires arguments as CommandLine.arguments.
+  private var length: Int           // Condition class returns length of password from options.
+  private var returnCode: Int32     // Condition class returns return code. Success:0, Failure:1
+  private var member: [Character]   // Condition class returns character set of password from options.
   init(arguments: [String], length: Int = 0, returnCode: Int32 = 0, member: [Character] = []) {
     self.arguments = arguments
     self.length = length
