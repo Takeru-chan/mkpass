@@ -1,6 +1,6 @@
 class Condition {
   private var length: Int           // Condition class returns length of password from options.
-  private var returnCode: Int32     // Condition class returns return code. Success:0, Failure:1
+  private var returnCode: Int32     // Condition class returns return code. Success:0, Version:1, Help:2, Failure:9
   private var member: [Character]   // Condition class returns character set of password from options.
   init(length: Int = 0, returnCode: Int32 = 0, member: [Character] = []) {
     self.length = length
@@ -32,7 +32,7 @@ class Condition {
             argType = ArgsType.length
           default:
             argType = ArgsType.error
-            returnCode = 1
+            returnCode = 9
             break
           }
         } else if argType == ArgsType.option {
@@ -52,9 +52,17 @@ class Condition {
             status.symbol |= 0b00000001
           case "x":
             status.exclude |=  0b00000001
-          default:
+          case "v":
             argType = ArgsType.error
             returnCode = 1
+            break
+          case "h":
+            argType = ArgsType.error
+            returnCode = 2
+            break
+          default:
+            argType = ArgsType.error
+            returnCode = 9
             break
           }
         } else if argType == ArgsType.length {
@@ -63,7 +71,7 @@ class Condition {
             argType = ArgsType.length
           default:
             argType = ArgsType.error
-            returnCode = 1
+            returnCode = 9
             break
           }
         }

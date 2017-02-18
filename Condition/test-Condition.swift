@@ -3,8 +3,8 @@ import Foundation
 let testCase: [(condition: String, arguments: [String], result: String)] =
   [("No option -> ", ["./test-Condition"], "abcdefghijklmnopqrstuvwxyz0123456789-8-0"),
   ("Specified correct length(10) -> ", ["./test-Condition", "10"], "abcdefghijklmnopqrstuvwxyz0123456789-10-0"),
-  ("Specified invalild length(-10) -> ", ["./test-Condition", "-10"], "-0-1"),
-  ("Specified invalild length(0.5) -> ", ["./test-Condition", "0.5"], "-0-1"),
+  ("Specified invalild length(-10) -> ", ["./test-Condition", "-10"], "-0-9"),
+  ("Specified invalild length(0.5) -> ", ["./test-Condition", "0.5"], "-0-9"),
   ("Specified duplicated length(10 5) -> ", ["./test-Condition", "10", "5"], "abcdefghijklmnopqrstuvwxyz0123456789-5-0"),
   ("Specified correct switch(-a) -> ", ["./test-Condition", "-a"], "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~-8-0"),
   ("Specified correct switch(-ax) -> ", ["./test-Condition", "-ax"], "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{}~-8-0"),
@@ -22,7 +22,9 @@ let testCase: [(condition: String, arguments: [String], result: String)] =
   ("Specified correct switch(-sx) -> ", ["./test-Condition", "-sx"], "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{}~-8-0"),
   ("Specified correct switch(-s -x) -> ", ["./test-Condition", "-s", "-x"], "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{}~-8-0"),
   ("Specified correct switch(-x) -> ", ["./test-Condition", "-x"], "abcdefghijkmnopqrstuvwxyz23456789-8-0"),
-  ("Specified invalild switch(-A) -> ", ["./test-Condition", "-A"], "-0-1"),
+  ("Specified invalild switch(-A) -> ", ["./test-Condition", "-A"], "-0-9"),
+  ("Specified correct switch(-v) -> ", ["./test-Condition", "-v"], "-0-1"),
+  ("Specified correct switch(-h) -> ", ["./test-Condition", "-h"], "-0-2"),
   ("Specified correct switch(-a) and length(10) -> ", ["./test-Condition", "-a", "10"], "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~-10-0")]
 var condition: (member:[Character], length:Int, status:Int32)
 var result: String
