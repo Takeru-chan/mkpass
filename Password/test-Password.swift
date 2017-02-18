@@ -10,7 +10,7 @@ print("Result:\(result)")
 for i in result.characters {
   check = false
   for j in condition.member {
-    if i == j { // Change while loop check!!
+    if i == j {
       check = true
     }
   }
