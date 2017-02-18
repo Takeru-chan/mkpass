@@ -1,15 +1,13 @@
 class Condition {
-  private var arguments: [String]   // Condition class requires arguments as CommandLine.arguments.
   private var length: Int           // Condition class returns length of password from options.
   private var returnCode: Int32     // Condition class returns return code. Success:0, Failure:1
   private var member: [Character]   // Condition class returns character set of password from options.
-  init(arguments: [String], length: Int = 0, returnCode: Int32 = 0, member: [Character] = []) {
-    self.arguments = arguments
+  init(length: Int = 0, returnCode: Int32 = 0, member: [Character] = []) {
     self.length = length
     self.returnCode = returnCode
     self.member = member
   }
-  func generateMember() {
+  func get(arguments: [String]) -> ([Character], Int, Int32) {
     enum ArgsType {
       case unknown
       case option
@@ -96,9 +94,6 @@ class Condition {
     if (returnCode == 0 && length == 0) {
       length = 8
     }
-  }
-  func get() -> ([Character], Int, Int32) {
-    self.generateMember()
     return (member, length, returnCode)
   }
 }

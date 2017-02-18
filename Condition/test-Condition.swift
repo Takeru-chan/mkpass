@@ -30,7 +30,7 @@ var strings: String
 for var i in 0..<testCase.count {
   strings = ""
   print(testCase[i].condition, terminator:"")
-  condition = Condition(arguments:testCase[i].arguments).get()
+  condition = Condition().get(arguments:testCase[i].arguments)
   for n in condition.member {
     strings += "\(n)"
   }
