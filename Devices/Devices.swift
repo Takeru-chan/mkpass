@@ -27,3 +27,9 @@ class Pasteboard {
     return content
   }
 }
+class EnvironmentVariable {
+  func read(name: String) -> (String, Int32) {
+    guard let content = getenv(name) else { return ("", 1) }
+    return (String(utf8String: content)!, 0)
+  }
+}

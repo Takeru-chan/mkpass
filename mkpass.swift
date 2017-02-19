@@ -1,4 +1,3 @@
-#! /usr/bin/swift
 import Foundation
 let screen:Screen = Screen()
 let pasteboard:Pasteboard = Pasteboard()
