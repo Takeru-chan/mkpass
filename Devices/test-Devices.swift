@@ -1,4 +1,5 @@
-#! /usr/bin/swift
+// test-Devices version 1.00, 2017.3.1, (c)2017 Takeru-chan
+// Released under the MIT license. http://opensource.org/licenses/MIT
 import Foundation
 let screen = Screen()
 let pasteboard = Pasteboard()
@@ -7,4 +8,4 @@ print("If string below is '\(message)', it is OK.")
 screen.write(message:message)
 print("Original pasteboard contains '\(pasteboard.read())'.")
 pasteboard.write(message:message)
-print("And if pasteboard contains '\(pasteboard.read())'.")
+print("And now, pasteboard contains '\(pasteboard.read())'.")
