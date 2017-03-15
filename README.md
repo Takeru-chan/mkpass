@@ -1,11 +1,11 @@
-#Password generator for macOS.
+# Password generator for macOS.
 Qiitaに投稿した[PowerShellでパスワード生成](http://qiita.com/Takeru/items/da17c8ae9122bca6f2d4)と
 [PowerShellで生成したパスワードを暗号化して保存する](http://qiita.com/Takeru/items/c8c769f88e8ccb06ffe3)を使って、
 少し汎用性をもたせたPowerShellスクリプトをベースにSwiftで書きました。  
 
 ※バージョン番号はシェルスクリプト版のものを引き継ぎました。  
 
-##Usage | 使い方
+## Usage | 使い方
 引数なしで起動すると英小文字と数字を組み合わせた８桁のパスワードを生成します。  
 引数に整数を指定することで任意の長さのパスワードを生成できます。  
 以下オプションの組み合わせにより、パスワード生成に使用される文字種を指定できます。  
@@ -17,7 +17,7 @@ Qiitaに投稿した[PowerShellでパスワード生成](http://qiita.com/Takeru
 * -a 上記全文字種
 * -x 紛らわしい文字(I1l|0O)を除外する（PowerShellスクリプト版は未対応）
 
-##Encode/Decode | 暗号/復号
+## Encode/Decode | 暗号/復号
 PowerShell版のみ暗号化されたログを残すことができます。  
 
 生成したパスワードは生成日時に続けて暗号化された状態で、ホームディレクトリ中のpasswd.logに追記されます。  
@@ -41,6 +41,6 @@ nオプションに続けてコメントを与えると、指定行にコメン�
 コメントのある行にnオプションでコメントを与えると、コメントを上書き更新します。
 またコメントのある行に対して-nオプションとともに同一コメントを与えると、コメントが削除されます。  
 
-##License
+## License
 This script has released under the MIT license.  
 [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT)
